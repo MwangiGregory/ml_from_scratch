@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, maximum-scale=0.9, user-scalable=0">
+        <title>Data Creator</title>
+        <link rel="stylesheet" href="style.css"/>
+    </head>
+    <body>
+        <div id="content">
+            <h1>Data Collector</h1>
+            <div>
+                <input id="nameField" type="text" placeholder="Please enter your name">
+                <span id="drawingLabel"></span>
+                <button id="proceedBtn" onclick="start()">START</button>
+                
+            </div>
+            <br>
+            <div id="sketchPadContainer" style="visibility: hidden;"></div>
+        </div>
+        <script src="js/sketchPad.js"></script>
+        <script src="js/draw.js"></script>
+        <script>
+            const sketchPadContainer = document.getElementById("sketchPadContainer");
+            const sketchPad = new SketchPad(sketchPadContainer);
+            const proceedBtn = document.getElementById("proceedBtn");
+            const labels = ['cat', 'ball'];
+            const drawingLabel = document.getElementById("drawingLabel");
+            let index = 0;
+            const data = {
+                userName: null,
+                session: new Date().getMilliseconds(),
+                drawings: {}
+            };
+            
+            function start() {
+                const nameField = document.getElementById("nameField");
+                if (!nameField.value) {
+                    alert("Please enter your first name.");
+                    return;
+                }
+                data.userName = nameField.value;
+                nameField.style.display = "none";
+                proceedBtn.innerHTML = "NEXT";
+                sketchPadContainer.style.visibility = "visible";
+                drawingLabel.innerHTML = "Please draw a "+labels[index];
+                proceedBtn.removeEventListener('click', start);
+                proceedBtn.onclick = next;
+            }
+
+            function next() {
+                if (sketchPad.paths.length === 0) {
+                    alert(`Please draw the ${labels[index]} first`);
+                    return;
+                }
+                data.drawings[labels[index]] = sketchPad.paths;
+                sketchPad.paths = [];
+                index++;
+                if (index === labels.length) {
+                    drawingLabel.innerHTML = `Thank you ${data.userName} for participating.`;
+                    proceedBtn.innerHTML = "SAVE";
+                    sketchPadContainer.style.visibility = "hidden";
+                    sketchPad.undoBtn.style.display = "none";
+                    sketchPad.clearBtn.style.display = "none";
+                    proceedBtn.removeEventListener('click', next);
+                    proceedBtn.onclick = save;
+                    return;
+                }
+                drawingLabel.innerHTML = "Please draw a "+labels[index];
+                sketchPad.ctx.clearRect(0, 0, 400, 400);
+            }
+
+            function save() {
+                const debugEl = document.createElement("p");
+                debugEl.innerText = "SAVING";
+                const content = document.getElementById("content");
+                content.appendChild(debugEl);
+            }
+        </script>
+    </body>
+</html>

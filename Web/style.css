@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: skyblue;
+    margin: 0;
+    padding: 0;
+}
+
+#content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+button {
+    border: none;
+    padding: 2px 10px 2px 10px;
+    background-color: navy;
+    border-radius: 5px;
+    color: white;
+    margin: 10px;
+}
+
+button:hover {
+    background-color: mediumblue;
+    cursor: pointer;
+}
+
+button:disabled, button:disabled:hover {
+    background-color: gray;
+    cursor: default;
+}
+
+button:active {
+    background-color: lightblue;
+    color: black;
+}
